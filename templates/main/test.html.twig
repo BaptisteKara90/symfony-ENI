@@ -9,5 +9,35 @@
 </head>
 <body>
 <h1>C'est le test ! YOUHOU</h1>
+
+{# Création d'un variable #}
+{% set name = "Batou" %}
+<h2>Hello {{ name }}</h2>
+
+{# Création d'un tableau #}
+{% set colors = ["blue", "pink", "green", "yellow"] %}
+
+{% for color in colors %}
+    {% if loop.first and color == "blue" %}
+        <div>Première couleur : {{ color }}</div>
+    {% endif %}
+    <div style = "color: {{ color }}">{{ color }} / {{ loop.index0 }}</div>
+    {% else %}
+    <div>Pas de couleur</div>
+{% endfor %}
+
+{% set serie = {
+    name : 'Arcane',
+    year : 2024,
+    director : 'Riot game'
+} %}
+
+<h3>{{ serie.name }}</h3>
+<h3>{{ serie.year }}</h3>
+<h3>{{ serie.director }}</h3>
+
+{% for key, val in serie %}
+<div>{{ key }} : {{ val }}</div>
+{% endfor %}
 </body>
 </html>
