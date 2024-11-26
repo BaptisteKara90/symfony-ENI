@@ -20,6 +20,5 @@ class MainController extends AbstractController
     public function test(): Response
 {
     return $this->render('main/test.html.twig');
-
 }
 }

@@ -1,13 +1,8 @@
-<!doctype html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ parent() }} | Test
+{% endblock %}
+{% block body %}
 <h1>C'est le test ! YOUHOU</h1>
 
 {# Création d'un variable #}
@@ -26,6 +21,14 @@
     <div>Pas de couleur</div>
 {% endfor %}
 
+{% for i in 1..10 %}
+    <div>{{ i }}</div>
+{% endfor %}
+
+{% for i in 'a'..'z' %}
+    <span>{{ i }}</span>
+{% endfor %}
+
 {% set serie = {
     name : 'Arcane',
     year : 2024,
@@ -39,5 +42,22 @@
 {% for key, val in serie %}
 <div>{{ key }} : {{ val }}</div>
 {% endfor %}
-</body>
-</html>
+
+{# Les filtres #}
+
+<h2>Quelques filtres</h2>
+<div>{{ name| upper }} : {{ name|length }}</div>
+<div>{{ colors|join('-')|length }}</div>
+<div>{{ "now"|date('d-m-Y') }}</div>
+
+
+{#{% embed 'test/embed.html.twig'%}#}
+{#    {% block hello %}#}
+{#        {{ parent() }} | {{ name }}#}
+{#    {% endblock %}#}
+{#{% endembed %}#}
+
+{% embed 'test/embed.html.twig' with{"name" : name}%}
+{% endembed %}
+
+{% endblock %}
