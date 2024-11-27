@@ -4,7 +4,7 @@ body {
     background-position: center center;
     background-size: cover;
     color: #EEE;
-    font-family: 'Roboto', serif;
+    font-family: "Sour Gummy", sans-serif;
 }
 
 .flex_div{
@@ -156,4 +156,12 @@ textarea{
 
 .seasons{
     margin-top: 15px;
+}
+
+.hover-picture img {
+    transition: transform 0.3s ease-in-out;
+}
+
+.hover-picture:hover img {
+    transform: scale(1.2);
 }
