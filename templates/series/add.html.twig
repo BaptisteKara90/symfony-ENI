@@ -6,5 +6,10 @@
 
 {% block body %}
     <h1>Add a new TV show</h1>
+
+    {{ form_start(serieForm) }}
+    {{ form_widget(serieForm) }}
+    <button>Send</button>
+    {{ form_end(serieForm) }}
 {% endblock %}
 

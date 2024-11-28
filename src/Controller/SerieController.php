@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Serie;
+use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -40,31 +42,31 @@ class SerieController extends AbstractController
     }
 
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
-    public function add(EntityManagerInterface $entityManager): Response
+    public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
-//        $serie = new Serie();
-//        $serie->setName("Cyberpunk 2077")
-//            ->setBackdrop("backdrop.png")
-//            ->setDateCreated(new \DateTime("-1 year"))
-//            ->setGenres("Gangster")
-//            ->setFirstAirDate(new \DateTime())
-//            ->setOverview("Une série incroyable")
-//            ->setPopularity(999)
-//            ->setStatus("En cours")
-//            ->setPoster("poster.png")
-//            ->setTmdbId(1234)
-//            ->setVote(10);
-//
-//        $entityManager->persist($serie);
-//        $entityManager->flush();
-//
-//        $serie->setName("Cyberpop 2077");
-//        $entityManager->flush();
-//
-//        $entityManager->remove($serie);
-//        $entityManager->flush();
+        $serie = new Serie();
+        $serieForm = $this->createForm(SerieType::class, $serie);
 
-        return $this->render('series/add.html.twig');
+        $serieForm->handleRequest($request);
+
+        if ($serieForm->isSubmitted() && $serieForm->isValid()) {
+            $entityManager->persist($serie);
+            $entityManager->flush();
+            $this->addFlash('success', 'the TV Show' . $serie->getName() . ' was successfully added!');
+            return $this->redirectToRoute('series_detail', ['id' => $serie->getId()]);
+        }
+        if (!$serieForm->isSubmitted()) {
+            $this->addFlash('danger', 'the TV Show' . $serie->getName() . ' was not added!');
+            return $this->render('series/add.html.twig', [
+                'serieForm' => $serieForm,
+            ]);
+        }
+
+
+
+        return $this->render('series/add.html.twig',[
+            'serieForm' => $serieForm,
+        ]);
     }
 
     #[Route('/detail/{id}', name: 'detail', requirements: ['id' => '\d+'], methods: ['GET'])]
