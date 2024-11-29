@@ -53,7 +53,10 @@ class SerieType extends AbstractType
                     'Fantasy' => 'fantasy',
                     'Drama' => 'drama',
                     'Polar' => 'polar',
-                ]
+                ],
+                'multiple' => true,
+                'expanded' => true,
+                'mapped' => false,
             ])
             ->add('firstAirDate', null, [
                 'widget' => 'single_text',

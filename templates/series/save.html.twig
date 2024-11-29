@@ -7,7 +7,14 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Add a new TV show</h1>
+    <h1>
+        {% if serieId %}
+            Update
+        {% else%}
+            Add
+        {% endif%}
+        a new TV show
+        </h1>
 
     {{ form_start(serieForm) }}
     {{ form_widget(serieForm) }}

@@ -42,22 +42,33 @@ class SerieController extends AbstractController
     }
 
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
-    public function add(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/edit/{id}', name: 'edit', methods: ['GET', 'POST'])]
+    public function save(Request $request, EntityManagerInterface $entityManager, int $id = null, SerieRepository $serieRepository): Response
     {
-        $serie = new Serie();
+
+        $serie = $id ?  $serieRepository->find($id) : new Serie();
+
+        if (!$serie){
+            throw $this->createNotFoundException('No such TV show !');
+        }
+
         $serieForm = $this->createForm(SerieType::class, $serie);
+
+        $serieForm->get('genres')->setData(explode(' / ', $serie->getGenres()));
 
         $serieForm->handleRequest($request);
 
         if ($serieForm->isSubmitted() && $serieForm->isValid()) {
+            $serie->setGenres(implode(' / ', $serieForm->get('genres')->getData()));
             $entityManager->persist($serie);
             $entityManager->flush();
-            $this->addFlash('success', 'the TV Show' . $serie->getName() . ' was successfully added!');
+            $this->addFlash('success', 'the TV Show' . $serie->getName() . ' was successfully updated!');
             return $this->redirectToRoute('series_detail', ['id' => $serie->getId()]);
         }
 
-        return $this->render('series/add.html.twig',[
+        return $this->render('series/save.html.twig',[
             'serieForm' => $serieForm,
+            'serieId' => $id
         ]);
     }
 
