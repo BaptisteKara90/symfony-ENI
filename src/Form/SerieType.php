@@ -6,11 +6,13 @@ use App\Entity\Serie;
 use phpDocumentor\Reflection\Types\True_;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 
 class SerieType extends AbstractType
 {
@@ -64,7 +66,17 @@ class SerieType extends AbstractType
             ->add('lastAirDate', null, [
                 'widget' => 'single_text',
             ])
-            ->add('backdrop')
+            ->add('backdrop', FileType::class, [
+                'mapped' => false,
+                'constraints' => [
+                    new Image(
+                        [
+                            "maxSize" => '5M',
+                            'maxSizeMessage' => 'The file is too big',
+                        ]
+                    )
+                ]
+            ])
             ->add('poster')
             ->add('tmdbId')
         ;
