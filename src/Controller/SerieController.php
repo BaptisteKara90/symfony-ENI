@@ -55,14 +55,6 @@ class SerieController extends AbstractController
             $this->addFlash('success', 'the TV Show' . $serie->getName() . ' was successfully added!');
             return $this->redirectToRoute('series_detail', ['id' => $serie->getId()]);
         }
-        if (!$serieForm->isSubmitted()) {
-            $this->addFlash('danger', 'the TV Show' . $serie->getName() . ' was not added!');
-            return $this->render('series/add.html.twig', [
-                'serieForm' => $serieForm,
-            ]);
-        }
-
-
 
         return $this->render('series/add.html.twig',[
             'serieForm' => $serieForm,
