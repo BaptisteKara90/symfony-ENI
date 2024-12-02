@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>Add a new season !</h2>
+    {{ form_start(seasonForm) }}
+    {{ form_widget(seasonForm) }}
+    <button>Send !</button>
+    {{ form_end(seasonForm) }}
+{% endblock %}

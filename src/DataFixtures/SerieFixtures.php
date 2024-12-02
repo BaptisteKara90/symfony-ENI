@@ -7,7 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 
-class AppFixtures extends Fixture
+class SerieFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
@@ -27,6 +27,7 @@ class AppFixtures extends Fixture
                ->setGenres($faker->randomElement(["fantasy", "action", "comedy", "drama", "fantasy"]))
                ->setVote($faker->numberBetween(0, 10));
 
+//           $this->addReference("serie-$i", $serie);
            $manager->persist($serie);
         }
         $manager->flush();
