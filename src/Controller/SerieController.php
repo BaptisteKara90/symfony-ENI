@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/series', name: 'series_')]
 class SerieController extends AbstractController
@@ -22,15 +23,15 @@ class SerieController extends AbstractController
 //        $series = $serieRepository->findByGenresAndPopularity('comedy');
 
 
-        $maxPage = ceil($serieRepository->count([])/50);
+        $maxPage = ceil($serieRepository->count([]) / 50);
         //s'assurer que la page minimal est 1 et calculer la page max
         if ($page < 1) {
             $page = 1;
-           return $this->redirectToRoute("series_list", ['page' => $page]);
+            return $this->redirectToRoute("series_list", ['page' => $page]);
         }
         if ($page > $maxPage) {
             $page = $maxPage;
-          return $this->redirectToRoute("series_list", ['page' => $maxPage]);
+            return $this->redirectToRoute("series_list", ['page' => $maxPage]);
         }
 
         $series = $serieRepository->findWithPagination($page);
@@ -44,12 +45,13 @@ class SerieController extends AbstractController
 
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
     #[Route('/edit/{id}', name: 'edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function save(Request $request, EntityManagerInterface $entityManager, int $id = null, SerieRepository $serieRepository): Response
     {
 
-        $serie = $id ?  $serieRepository->find($id) : new Serie();
+        $serie = $id ? $serieRepository->find($id) : new Serie();
 
-        if (!$serie){
+        if (!$serie) {
             throw $this->createNotFoundException('No such TV show !');
         }
 
@@ -62,13 +64,12 @@ class SerieController extends AbstractController
         if ($serieForm->isSubmitted() && $serieForm->isValid()) {
 
 
-
             $backdrop = $serieForm->get('backdrop')->getData();
             if ($backdrop) {
                 /**
                  * @var UploadedFile $backdrop
                  */
-                $filename = $serie->getName(). '-' .uniqid() . '.'. $backdrop->guessExtension();
+                $filename = $serie->getName() . '-' . uniqid() . '.' . $backdrop->guessExtension();
                 $backdrop->move("../assets/img/backdrops/", $filename);
                 $serie->setBackdrop($filename);
             }
@@ -81,7 +82,7 @@ class SerieController extends AbstractController
             return $this->redirectToRoute('series_detail', ['id' => $serie->getId()]);
         }
 
-        return $this->render('series/save.html.twig',[
+        return $this->render('series/save.html.twig', [
             'serieForm' => $serieForm,
             'serieId' => $id
         ]);

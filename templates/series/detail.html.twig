@@ -13,26 +13,39 @@
                 <div>{{ serie.genres }}</div>
                 <div>Users rating : {{ serie.vote }}/10</div>
                 <div>Serie Status : {{ serie.status }}</div>
-                <div>Aired from {{ serie.firstAirDate | date('d-m-Y') }} to {{ serie.lastAirDate | date('d-m-Y') }}</div>
+                <div>Aired from {{ serie.firstAirDate | date('d-m-Y') }}
+                    to {{ serie.lastAirDate | date('d-m-Y') }}</div>
                 <div>{{ serie.overview|nl2br }}  </div>
-                <div><a href="{{ path('season_add', {'serieId' : serie.id}) }}"><button>Add a season</button></a> </div>
-                <div><a href="{{ path('series_delete', {'id' : serie.id}) }}"><button>Delete the serie</button></a></div>
+                {% if app.user %}
+                    <div><a href="{{ path('season_add', {'serieId' : serie.id}) }}">
+                            <button>Add a season</button>
+                        </a></div>
+                    <div><a href="{{ path('series_delete', {'id' : serie.id}) }}">
+                            <button>Delete the serie</button>
+                        </a></div>
+                {% endif %}
             </div>
         </article>
         <div class="seasons">
             {% for season in serie.seasons %}
-        <article>
-            <div>
-                <img src="{{ asset('img/posters/seasons/' ~ season.poster ) }}" alt="{{ serie.name }}">
-            </div>
-            <div>
-                <div># {{ season.number }}</div>
-                <div>Aired from {{ season.firstAirDate | date('d-m-Y') }}</div>
-                <div>{{ season.overview | nl2br }}</div>
-                <div><a href="{{ path('season_edit', {'id' : season.id}) }}"><button>Edit</button></a></div>
-                <div><a href="{{ path('season_delete', {'id' : season.id}) }}"><button>Delete</button></a></div>
-            </div>
-        </article>
+                <article>
+                    <div>
+                        <img src="{{ asset('img/posters/seasons/' ~ season.poster ) }}" alt="{{ serie.name }}">
+                    </div>
+                    <div>
+                        <div># {{ season.number }}</div>
+                        <div>Aired from {{ season.firstAirDate | date('d-m-Y') }}</div>
+                        <div>{{ season.overview | nl2br }}</div>
+                        {% if app.user %}
+                            <div><a href="{{ path('season_edit', {'id' : season.id}) }}">
+                                    <button>Edit</button>
+                                </a></div>
+                            <div><a href="{{ path('season_delete', {'id' : season.id}) }}">
+                                    <button>Delete</button>
+                                </a></div>
+                        {% endif %}
+                    </div>
+                </article>
             {% endfor %}
         </div>
     </section>
@@ -44,8 +57,8 @@
 
 {% block extraStyle %}
     <style>
-        body{
-            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0,0,0,0.3)), url("{{ asset('img/backdrops/' ~  serie.backdrop) }}");
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3)), url("{{ asset('img/backdrops/' ~  serie.backdrop) }}");
 
 
         }

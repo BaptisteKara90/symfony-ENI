@@ -1,18 +1,22 @@
-{% extends 'base.html.twig'%}
+{% extends 'base.html.twig' %}
 
 {% block body %}
     <h1>List of TV show</h1>
 
-        <div class="flex_div flex_between">
-            {% if currentPage > 1 %}
-            <a href="{{ path('series_list', {'page': currentPage - 1}) }}"><button> Previous Page</button></a>
-                {% else %}
-                <div></div>
-            {% endif %}
-            {% if currentPage <= maxPage %}
-            <a href="{{ path('series_list', {'page': currentPage + 1}) }}"><button>Next Page</button> </a>
-            {% endif %}
-        </div>
+    <div class="flex_div flex_between">
+        {% if currentPage > 1 %}
+            <a href="{{ path('series_list', {'page': currentPage - 1}) }}">
+                <button> Previous Page</button>
+            </a>
+        {% else %}
+            <div></div>
+        {% endif %}
+        {% if currentPage <= maxPage %}
+            <a href="{{ path('series_list', {'page': currentPage + 1}) }}">
+                <button>Next Page</button>
+            </a>
+        {% endif %}
+    </div>
     <section class="series-list">
         {% for serie in series %}
             <article title="{{ serie.name }} | {{ serie.seasons | length }}">
@@ -22,7 +26,7 @@
             </article>
         {% endfor %}
     </section>
-    
+
 {% endblock %}
 
 {% block title %}
