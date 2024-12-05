@@ -2,32 +2,49 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\SerieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
+#[ApiResource(operations:[
+    new Get(),
+    new GetCollection(),
+    new Post()
+],
+    normalizationContext: ['groups' => ['serie-api']],
+)]
+
 class Serie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('serie-api')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Please enter the name of the TV show')]
     #[Assert\Length(max: 255, maxMessage: 'Max {{ limit }} characters allowed')]
+    #[Groups('serie-api')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(min:2, minMessage: 'Minimum {{ limit }} characters allowed or NOTHING ! ')]
+    #[Groups('serie-api')]
     private ?string $overview = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\Choice(choices: ['canceled', 'returning','ended'])]
+    #[Groups('serie-api')]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 3, scale: 1)]
@@ -66,6 +83,7 @@ class Serie
      * @var Collection<int, Season>
      */
     #[ORM\OneToMany(targetEntity: Season::class, mappedBy: 'serie', cascade: ['remove'])]
+    #[Groups('serie-api')]
     private Collection $seasons;
 
     public function __construct()
