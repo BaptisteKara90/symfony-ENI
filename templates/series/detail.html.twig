@@ -24,6 +24,11 @@
                             <button>Delete the serie</button>
                         </a></div>
                 {% endif %}
+                <div>
+                    <div>User rating : <span id="serie-nbLike">{{ serie.nbLike }}</span></div>
+                    <button class="btn-like" value="1">Like !</button>
+                    <button class="btn-like" value="-1">Dislike !</button>
+                </div>
             </div>
         </article>
         <div class="seasons">
@@ -65,3 +70,33 @@
     </style>
 {% endblock %}
 
+{% block extraJs %}
+    <script>
+
+        let buttons = Array.from(document.querySelectorAll(".btn-like"))
+        let url = "{{ path('api_serie_update', { 'id':  serie.id}) }}"
+        let nbLikeDB = parseInt({{ serie.nbLike }})
+        let nbLikeQuery = document.querySelector('#serie-nbLike')
+
+        buttons.forEach(function(val){
+            let data = {
+                nbLike : nbLikeQuery + parseInt(val.value)
+            }
+
+            val.addEventListener('click', function(){
+                fetch(url,{
+                    method : 'PUT',
+                    body : JSON.stringify(data)
+                }).then(res => res.json())
+                    .then(data =>{
+                        nbLikeQuery.innerText = data.nbLike
+                        nbLikeDB = parseInt(data.nbLike)
+                    }
+                    )
+            })
+
+
+        })
+
+    </script>
+{% endblock %}
